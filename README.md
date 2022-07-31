@@ -1,7 +1,7 @@
 # DPtest
 这个Project是为了解答下面的智力题。
 界面使用了MFC， 也用到STL的容器（vector，set）和算法（sort，random）
-然后在解答的处理里用到了一下C++11的特性。 auto，constexpr，lambda函数
+然后在解答的处理里用到了一下C++11的特性（auto，constexpr，lambda函数）
 
 
 智力题：
