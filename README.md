@@ -9,6 +9,7 @@
 1) 一日票。有效期1日，票价2元
 2) 七日票。有效期7日，票价7元
 3) 月票。有效期30日，票价25元
+
 已知小明之后 M 天的行程，请帮助小明计算出最省钱的购票方式，给出最少需要花费的交通费。
 注:1<= M<= 100.000
 样例:
@@ -18,7 +19,8 @@
 
 ---
 运行的输出结果：
-![运行结果图](https://github.com/riffle2/DPtest/blob/master/result.jpg?raw=true)
+
+![运行结果图](https://github.com/riffle2/DPtest/blob/master/result.jpg)
 Result:  Minimum Cost:13		(Calc Time:0ms,Search total routine :22)
 Data:
 1,3,5,6,8,9,29,30,
