@@ -11,12 +11,12 @@ public:
 	CString strMessage2;
 	CString strMessage3;
 	CString strResult;
-	int TotalRoutie;
-	int DeletedRoutie;
+	int TotalRoutine;
+	int DeletedRoutine;
 	ULONGLONG dwTickCount;
 	CRunInfo()
 	{
-		TotalRoutie = DeletedRoutie = 0;
+		TotalRoutine = DeletedRoutine = 0;
 	}
 };
 

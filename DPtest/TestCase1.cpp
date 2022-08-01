@@ -30,22 +30,22 @@ int maxCost(int days)
 		return 0X7fffffff;
 }
 
-int Routie::compare(const Routie& otherRoutie)
+int Routine::compare(const Routine& otherRoutine)
 {
 	int iResult = 0;
-	if (index == otherRoutie.index) {
-		iResult = (cost <= otherRoutie.cost) ? -1 : 1;
+	if (index == otherRoutine.index) {
+		iResult = (cost <= otherRoutine.cost) ? -1 : 1;
 	}
 	else {
-		if (index < otherRoutie.index)
+		if (index < otherRoutine.index)
 		{
-			if (cost + maxCost(otherRoutie.index - index) <= otherRoutie.cost)
+			if (cost + maxCost(otherRoutine.index - index) <= otherRoutine.cost)
 			{
 				iResult = -1;
 			}
 		}
 		else {
-			if (cost >= otherRoutie.cost + maxCost(index - otherRoutie.index))
+			if (cost >= otherRoutine.cost + maxCost(index - otherRoutine.index))
 			{
 				iResult = 1;
 			}
@@ -54,23 +54,23 @@ int Routie::compare(const Routie& otherRoutie)
 	return iResult;
 }
 
-void DeleteHighCost(CRunInfo& runInfo, vector <Routie>& routies)
+void DeleteHighCost(CRunInfo& runInfo, vector <Routine>& routines)
 {
-	//Routie curRoutie;
+	//Routine curRoutine;
 	int iResult;
 	bool bErased;
-	for (auto iter = routies.begin(); iter != routies.end(); )
+	for (auto iter = routines.begin(); iter != routines.end(); )
 	{
 		bErased = false;
-		for (auto iterSub = iter + 1; iterSub != routies.end();) {
+		for (auto iterSub = iter + 1; iterSub != routines.end();) {
 			iResult = iter->compare(*iterSub);
 			if (iResult < 0) {
-				iterSub = routies.erase(iterSub);
-				++runInfo.DeletedRoutie;
+				iterSub = routines.erase(iterSub);
+				++runInfo.DeletedRoutine;
 			}else if (iResult > 0) {
-				iter = routies.erase(iter);
+				iter = routines.erase(iter);
 				bErased = true;
-				++runInfo.DeletedRoutie;
+				++runInfo.DeletedRoutine;
 				break;
 			}else {
 				++iterSub;
@@ -80,11 +80,11 @@ void DeleteHighCost(CRunInfo& runInfo, vector <Routie>& routies)
 			++iter;
 	}
 	// follow code performance isn't well, rewrite 
-	//for (auto iter = routies.begin(); iter != routies.end(); ++iter)
+	//for (auto iter = routines.begin(); iter != routines.end(); ++iter)
 	//{
 	//	if (iter->deleted)
 	//		continue;
-	//	for (auto iterSub = iter + 1; iterSub != routies.end(); ++iterSub) {
+	//	for (auto iterSub = iter + 1; iterSub != routines.end(); ++iterSub) {
 	//		if (iterSub->deleted)
 	//			continue;
 	//		iResult = iter->compare(*iterSub);
@@ -98,11 +98,11 @@ void DeleteHighCost(CRunInfo& runInfo, vector <Routie>& routies)
 	//	}
 	//}
 
-	//for (auto iter = routies.begin(); iter != routies.end(); )
+	//for (auto iter = routines.begin(); iter != routines.end(); )
 	//{
 	//	if (iter->deleted) {
-	//		iter = routies.erase(iter);
-	//		++runInfo.DeletedRoutie;
+	//		iter = routines.erase(iter);
+	//		++runInfo.DeletedRoutine;
 	//	}
 	//	else
 	//		iter++;
@@ -118,27 +118,27 @@ int DoTest(void* pUserData, const vector<int>& AtDays)
 
 	CRunInfo runinfo;
 	runinfo.dwTickCount = GetTickCount64();
-	vector <Routie> routies;
-	vector <Routie>::iterator iter;
-	Routie curRoutie;
+	vector <Routine> routines;
+	vector <Routine>::iterator iter;
+	Routine curRoutine;
 	int  iLp;
 	int n;
-	curRoutie.index = -1;
-	routies.push_back(curRoutie);
+	curRoutine.index = -1;
+	routines.push_back(curRoutine);
 	int iCount = 1;
 	for ( auto day = AtDays.begin(); day < AtDays.end(); ++day, ++iCount) {
 		n = *day;
-		vector <Routie> newInsert;
-		for (iter = routies.begin(); iter != routies.end(); iter++)
+		vector <Routine> newInsert;
+		for (iter = routines.begin(); iter != routines.end(); iter++)
 		{
 			if (n > iter->index)
 			{
 				for (iLp = 1; iLp < TicketCount; ++iLp) {
-					curRoutie = *iter;
-					curRoutie.index = (n + Tickets[iLp].Days - 1);
-					curRoutie.cost += Tickets[iLp].Cost;
-					curRoutie.Points.push_back((iLp << 28) + n);
-					newInsert.push_back(curRoutie);
+					curRoutine = *iter;
+					curRoutine.index = (n + Tickets[iLp].Days - 1);
+					curRoutine.cost += Tickets[iLp].Cost;
+					curRoutine.Points.push_back((iLp << 28) + n);
+					newInsert.push_back(curRoutine);
 				}
 
 				iter->index = n + Tickets[0].Days - 1;
@@ -146,33 +146,33 @@ int DoTest(void* pUserData, const vector<int>& AtDays)
 				iter->Points.push_back((0 << 28) + n);
 			}
 		}
-		routies.insert(routies.end(), newInsert.begin(), newInsert.end());
-		runinfo.TotalRoutie += newInsert.size();
+		routines.insert(routines.end(), newInsert.begin(), newInsert.end());
+		runinfo.TotalRoutine += newInsert.size();
 
 		//
-		DeleteHighCost(runinfo,routies);
+		DeleteHighCost(runinfo,routines);
 
 		if (!(iCount % onePercent)) {
-			runinfo.strMessage1.Format(TEXT("Do %d/%d rout Count:%d"), iCount, AtDays.size(), routies.size());
+			runinfo.strMessage1.Format(TEXT("Do %d/%d rout Count:%d"), iCount, AtDays.size(), routines.size());
 			pDlg->ShowRunInfo(&runinfo);
 		}
 	}
 
 	// get minimum Cost 
-	Routie minRoutie = *routies.begin();
-	int minCost = routies.begin()->cost;
-	for (auto iter : routies)
+	Routine minRoutine = *routines.begin();
+	int minCost = routines.begin()->cost;
+	for (auto iter : routines)
 	{
 		if (minCost > iter.cost){
-			minRoutie = iter;
+			minRoutine = iter;
 			minCost = iter.cost;
 		}
 	}
-	Routie ResultRoutie = minRoutie;
+	Routine ResultRoutine = minRoutine;
 
 	// Show Result
 	CString strOne;
-	strOne.Format(_T("\r\nResult:  Minimum Cost:%d\t\t(Calc Time:%lldms,Search total routine :%d)\r\n"), ResultRoutie.cost, GetTickCount64() - runinfo.dwTickCount, runinfo.TotalRoutie);
+	strOne.Format(_T("\r\nResult:  Minimum Cost:%d\t\t(Calc Time:%lldms,Search total routine :%d)\r\n"), ResultRoutine.cost, GetTickCount64() - runinfo.dwTickCount, runinfo.TotalRoutine);
 	runinfo.strResult += strOne;
 	runinfo.strResult += "Data:\r\n";
 	for (auto day :AtDays) {
@@ -180,11 +180,11 @@ int DoTest(void* pUserData, const vector<int>& AtDays)
 		runinfo.strResult.Append(strOne);
 	}
 	runinfo.strResult += _T("\r\nticket Detail:\r\n");
-	for (auto buyaction : ResultRoutie.Points) {
+	for (auto buyaction : ResultRoutine.Points) {
 		strOne.Format(_T("Day%d, buy %s\r\n"), (buyaction) & 0xfffffff, Tickets[(buyaction) >> 28].decr.c_str());
 		runinfo.strResult.Append(strOne);
 	}
 	pDlg->ShowResultInfo(&runinfo);
-	return ResultRoutie.cost;
+	return ResultRoutine.cost;
 }
 
